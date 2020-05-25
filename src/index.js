@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// <App /> 은 사용자 component.
 ReactDOM.render(
   <React.StrictMode>
     <App />
