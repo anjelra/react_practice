@@ -40,11 +40,13 @@ class Subject extends Component {
   // 자바스크립트 최신 스펙.. class 안에 선언된 function은 function 생략. 따라서 render()는 함수임.
   // 주의!!!! component를 만들 때는 반드시 하나의 최상위 태그로 시작해야함.
   // 여기서는 header가 최상위 태그임..
+
+  // this.props는 태그 속성의 attribute 라고 생각하면 편함.
   render() {
     return (
       <header>
-            <h1>WEB</h1>
-            world wide web!
+            <h1>{this.props.title}</h1>
+            {this.props.sub}
         </header>
     );
   }
@@ -69,20 +71,24 @@ class Content extends Component {
   render() {
     return (
       <article>
-        <h2>HTML</h2>
-        HTML is HyperText Markup Language.
+        <h2>{this.props.title}</h2>
+        {this.props.desc}
       </article>
     );
   }
 }
 
+// compoent를 가변적으로 사용하고 싶으면 속성(html)을 넣어주면 되는데
+// react에서는 props 라고 함.
+// 그러면 효율적으로 사용할 수 있고, 가변적이라 여러 곳에 쓰일 수 있다. 하나의 컴포넌트로!
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Subject></Subject>
+        <Subject title="WEB" sub="world wide web!"></Subject>
+        <Subject title="React" sub="For UI"></Subject>
         <TOC></TOC>
-        <Content></Content>
+        <Content title="HTML" desc="HTML is HyperText Markup Language."></Content>
       </div>
     );
   };
