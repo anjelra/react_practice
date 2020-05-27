@@ -50,7 +50,7 @@ class App extends Component {
     // 파생 클래스에서 super() 함수가 먼저 호출되어야 this 키워드를 사용할 수 있습니다. 그렇지 않을 경우 참조오류가 발생합니다.
     super(props);
     this.state = {
-      mode: 'welcome',
+      mode: 'read',
       welcome: {title: 'welcome', desc: 'Hello, React!!'},
       subject: {title: 'WEB', sub: 'world wide web!'},
       contents: [
@@ -85,7 +85,25 @@ class App extends Component {
             <h1><a href="/" onClick={function(e) {
               console.log(e);
               e.preventDefault();
-            }}>{this.state.subject.title}</a></h1>
+              // 여기서 하고자하는 것은 state값을 변경하는 것임. 그런데 event 안에서는 this가 아무값도 들어있지 않음(즉, undefined임)
+              // 주의할점
+              // 1. 따라서, this의 값을 bind()를 통해 넘겨주어야 함. bind(this) -> bind 함수를 쓰기 싫으면 화살표 함수를 쓰면 됨. 화살표 함수를 쓰게 되면 this 값을 이어주는 역할을 함.
+              // 2. this.state.mode = 'welcome' 이라고 상태를 변경하면 react는 상태가 바뀌었는지 알 수 없음. 따라서 setState를 사용해야햠.
+              this.setState({
+                mode: 'welcome'
+              });
+            }.bind(this)}>{this.state.subject.title}</a></h1>
+             {/* <h1><a href="/" onClick={(e) => {
+              console.log(e);
+              e.preventDefault();
+              // 여기서 하고자하는 것은 state값을 변경하는 것임. 그런데 event 안에서는 this가 아무값도 들어있지 않음(즉, undefined임)
+              // 주의할점
+              // 1. 따라서, this의 값을 bind()를 통해 넘겨주어야 함. bind(this)
+              // 2. this.state.mode = 'welcome' 이라고 상태를 변경하면 react는 상태가 바뀌었는지 알 수 없음. 따라서 setState를 사용해야햠.
+              this.setState({
+                mode: 'welcome'
+              });
+            }}>{this.state.subject.title}</a></h1> */}
             {this.state.subject.desc}
         </header>
         <Subject title="React" sub="For UI"></Subject>
