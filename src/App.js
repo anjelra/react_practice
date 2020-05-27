@@ -50,6 +50,8 @@ class App extends Component {
     // 파생 클래스에서 super() 함수가 먼저 호출되어야 this 키워드를 사용할 수 있습니다. 그렇지 않을 경우 참조오류가 발생합니다.
     super(props);
     this.state = {
+      mode: 'welcome',
+      welcome: {title: 'welcome', desc: 'Hello, React!!'},
       subject: {title: 'WEB', sub: 'world wide web!'},
       contents: [
         {id: 1, title: 'HTML', desc:'HTML is HyperText Markup Language.'},
@@ -58,7 +60,21 @@ class App extends Component {
       ]
     };  // state 값 초기화
   }
+
+  // react는 state값이 바뀌면 해당 state를 사용하는 component의 render() 부분이 다시 호출됨.
+  // render() 함수가 다시 호출되므로 따라서 render() 함수 하위에 있는 컴포넌트들도 render() 함수가 있기 때문에
+  // 화면이 다시 그려짐.
+  // 그 말은 즉슨, props 나 state값이 바뀌면 화면이 다시 그려짐.
   render() {
+    console.log('App render');
+    var _title, _desc = null;
+    if (this.state.mode === 'welcome') {
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    } else if (this.state.mode === 'read') {
+      _title = this.state.contents[0].title;
+      _desc = this.state.contents[0].desc;
+    }
     return (
       <div className="App">
         <Subject 
@@ -67,7 +83,7 @@ class App extends Component {
         </Subject>
         <Subject title="React" sub="For UI"></Subject>
         <TOC data={this.state.contents}></TOC>
-        <Content title="HTML" desc="HTML is HyperText Markup Language."></Content>
+        <Content title={_title} desc={_desc}></Content>
       </div>
     );
   };
