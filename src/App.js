@@ -51,6 +51,7 @@ class App extends Component {
     super(props);
     this.state = {
       mode: 'read',
+      selected_content_id: 2,
       welcome: {title: 'welcome', desc: 'Hello, React!!'},
       subject: {title: 'WEB', sub: 'world wide web!'},
       contents: [
@@ -72,16 +73,35 @@ class App extends Component {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
     } else if (this.state.mode === 'read') {
-      _title = this.state.contents[0].title;
-      _desc = this.state.contents[0].desc;
+      var i = 0;
+      var data = this.state.contents;
+
+      while (i < data.length) {
+        if (this.state.selected_content_id === data[i].id) {
+          _title = data[i].title;
+          _desc = data[i].desc;
+          break;
+        }
+        i++;
+      }
     }
     return (
       <div className="App">
-        {/* <Subject 
+        <Subject 
           title={this.state.subject.title} 
-          sub={this.state.subject.sub}>
-        </Subject> */}
-        <header>
+          sub={this.state.subject.sub}
+          onChangePage={() => {
+            this.setState({
+              mode: 'welcome'
+            });
+          }}>
+          {/* onChangePage={function() {
+            this.setState({
+              mode: 'welcome'
+            });
+          }.bind(this)}> */}
+        </Subject>
+        {/* <header>
             <h1><a href="/" onClick={function(e) {
               console.log(e);
               e.preventDefault();
@@ -93,21 +113,17 @@ class App extends Component {
                 mode: 'welcome'
               });
             }.bind(this)}>{this.state.subject.title}</a></h1>
-             {/* <h1><a href="/" onClick={(e) => {
-              console.log(e);
-              e.preventDefault();
-              // 여기서 하고자하는 것은 state값을 변경하는 것임. 그런데 event 안에서는 this가 아무값도 들어있지 않음(즉, undefined임)
-              // 주의할점
-              // 1. 따라서, this의 값을 bind()를 통해 넘겨주어야 함. bind(this)
-              // 2. this.state.mode = 'welcome' 이라고 상태를 변경하면 react는 상태가 바뀌었는지 알 수 없음. 따라서 setState를 사용해야햠.
-              this.setState({
-                mode: 'welcome'
-              });
-            }}>{this.state.subject.title}</a></h1> */}
             {this.state.subject.desc}
-        </header>
-        <Subject title="React" sub="For UI"></Subject>
-        <TOC data={this.state.contents}></TOC>
+        </header> */}
+        <TOC 
+          data={this.state.contents}
+          onChange={(id) => {
+            this.setState({
+              mode: 'read',
+              selected_content_id: parseInt(id)
+            });
+          }}>
+        </TOC>
         <Content title={_title} desc={_desc}></Content>
       </div>
     );

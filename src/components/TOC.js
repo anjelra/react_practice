@@ -8,8 +8,18 @@ class TOC extends Component {
         var data = this.props.data;
         var i = 0;
         while (i < data.length) {
-        lists.push(<li key={data[i].id}><a href={"/content/" + data[i].id}>{data[i].title}</a></li>);
-            i = i + 1;
+        lists.push(
+            <li key={data[i].id}>
+                <a 
+                    href={"/content/" + data[i].id} 
+                    data-id={data[i].id}
+                    // data-id 라고 쓰면 e.target.dataset 안에 들어간다(유용하게 쓸 수 있으므로 반드시 기억)
+                    onClick={(e) => {
+                    e.preventDefault();
+                    this.props.onChange(e.target.dataset.id);
+                }}>
+                {data[i].title}</a></li>);
+                i = i + 1;
         }
       return (
         <nav>
