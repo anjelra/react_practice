@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
+import Control from './components/Control';
 import TOC from './components/TOC';
-import Content from './components/Content';
+import ReadContent from './components/ReadContent';
+import CreateContent from './components/CreateContent';
 import Subject from './components/Subject';
 
 // 1. function 형식으로 사용할 수 있다.
@@ -49,8 +51,11 @@ class App extends Component {
   constructor(props) {
     // 파생 클래스에서 super() 함수가 먼저 호출되어야 this 키워드를 사용할 수 있습니다. 그렇지 않을 경우 참조오류가 발생합니다.
     super(props);
+    // 아래의 값은 contents의 갯수를 확인하기 위한 것일 뿐 UI에는 아무런 영향이 없으므로
+    // state 값에 넣어줄 필요가 없다.
+    this.max_content_id = 3;
     this.state = {
-      mode: 'read',
+      mode: 'create',
       selected_content_id: 2,
       welcome: {title: 'welcome', desc: 'Hello, React!!'},
       subject: {title: 'WEB', sub: 'world wide web!'},
@@ -68,10 +73,12 @@ class App extends Component {
   // 그 말은 즉슨, props 나 state값이 바뀌면 화면이 다시 그려짐.
   render() {
     console.log('App render');
-    var _title, _desc = null;
+    var _title, _desc, _article = null;
+
     if (this.state.mode === 'welcome') {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     } else if (this.state.mode === 'read') {
       var i = 0;
       var data = this.state.contents;
@@ -84,6 +91,44 @@ class App extends Component {
         }
         i++;
       }
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
+    } else if (this.state.mode === 'create') {
+      _article = <CreateContent insertTOC={(title, desc) => {
+        // 배열 state에 추가하는 방법은 2가지가 있는데, push 를 쓰고나면 react가 바뀐 것을 알 수 없어서 
+        // 반드시 setState로 마무리를 해줘야 한다. 그런데 이렇게 push 를 쓰는 방법은 좋은 방법이 아니다. (이유는 성능 차이!!)
+        // 따라서, concat() 메소드를 이용해서 원본 데이터는 그대로 두고(push는 원본 데이터가 변경)
+        // concat() 으로 이어주는 방법이 좋은 방법이다.
+
+        // 방법1 push 를 이용    
+        // this.state.contents.push({
+        //   contents : {
+        //     id: this.max_content_id + 1,
+        //     title: title,
+        //     desc: desc
+        //   }
+        // });
+
+        // this.setState({
+        //   contents: this.state.contents
+        // });
+
+        // this.max_content_id++;
+
+        // 방법2 concat을 이용
+        var newContents = this.state.contents.concat({
+          id: this.max_content_id + 1,
+            title: title,
+            desc: desc
+        });
+
+
+        this.setState({
+          contents: newContents
+        });
+
+        this.max_content_id++;
+
+      }}></CreateContent>;
     }
     return (
       <div className="App">
@@ -115,6 +160,11 @@ class App extends Component {
             }.bind(this)}>{this.state.subject.title}</a></h1>
             {this.state.subject.desc}
         </header> */}
+        <Control onChangeMode={(mode) => {
+          this.setState({
+            mode: mode
+          });
+        }}></Control>
         <TOC 
           data={this.state.contents}
           onChange={(id) => {
@@ -124,7 +174,8 @@ class App extends Component {
             });
           }}>
         </TOC>
-        <Content title={_title} desc={_desc}></Content>
+        {_article}
+        {/* <ReadContent title={_title} desc={_desc}></ReadContent> */}
       </div>
     );
   };

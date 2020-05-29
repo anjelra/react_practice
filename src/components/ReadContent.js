@@ -1,7 +1,7 @@
 // React 라는 라이브러리에서 Component 라는 클래스를 로딩한다는 뜻
 import React, { Component } from 'react';
 
-class Content extends Component {
+class ReadContent extends Component {
     render() {
         console.log('Content render');
         return (
@@ -13,4 +13,4 @@ class Content extends Component {
     }
 }
 
-export default Content;
+export default ReadContent;
