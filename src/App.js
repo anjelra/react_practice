@@ -56,7 +56,7 @@ class App extends Component {
     // state 값에 넣어줄 필요가 없다.
     this.max_content_id = 3;
     this.state = {
-      mode: 'create',
+      mode: 'welcome',
       selected_content_id: 2,
       welcome: {title: 'welcome', desc: 'Hello, React!!'},
       subject: {title: 'WEB', sub: 'world wide web!'},
@@ -175,6 +175,29 @@ class App extends Component {
           });
         }
        }}></UpdateContent>
+    } else if (this.state.mode === 'delete') {
+      if (window.confirm('really?')) {
+        var i = 0;
+        var _contents = Array.from(this.state.contents);
+
+        while (i < _contents.length) {
+
+          if (_contents[i].id === this.state.selected_content_id) {
+            _contents.splice(i, 1);
+            break;
+          }
+          i++;
+
+          this.setState({
+            contents: _contents,
+            mode: 'welcome'
+          });
+
+          alert('delete success!!');
+        }
+      }
+      _content = this.getReadContent();
+      console.log('delete', _content);
     }
 
     return _article;
