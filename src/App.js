@@ -115,12 +115,31 @@ class App extends Component {
         // this.max_content_id++;
 
         // 방법2 concat을 이용
-        var newContents = this.state.contents.concat({
-          id: this.max_content_id + 1,
-            title: title,
-            desc: desc
-        });
+        // var newContents = this.state.contents.concat({
+        //   id: this.max_content_id + 1,
+        //     title: title,
+        //     desc: desc
+        // });
 
+
+        // this.setState({
+        //   contents: newContents
+        // });
+
+        // 방법3 Array.from() 을 사용
+        // Array.from api 는 
+        // var a = [1, 2];
+        // var b = Array.from(a); -> 이거는 배열일 경우에만 사용할수 있다.
+        // console.log(a === b); 이 false이기 때문에(복제를 해서 만드는 것)이므로
+        // concat과 비슷한 역할을 한다고 보면 된다.
+        // Object인 경우에는, Object.assign({}, a);
+        var newContents = Array.from(this.state.contents);
+
+        newContents.push({
+          id: this.max_content_id + 1,
+          title: title,
+          desc: desc
+        });
 
         this.setState({
           contents: newContents
