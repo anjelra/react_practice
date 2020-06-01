@@ -4,6 +4,7 @@ import Control from './components/Control';
 import TOC from './components/TOC';
 import ReadContent from './components/ReadContent';
 import CreateContent from './components/CreateContent';
+import UpdateContent from './components/UpdateContent';
 import Subject from './components/Subject';
 
 // 1. function 형식으로 사용할 수 있다.
@@ -67,30 +68,32 @@ class App extends Component {
     };  // state 값 초기화
   }
 
-  // react는 state값이 바뀌면 해당 state를 사용하는 component의 render() 부분이 다시 호출됨.
-  // render() 함수가 다시 호출되므로 따라서 render() 함수 하위에 있는 컴포넌트들도 render() 함수가 있기 때문에
-  // 화면이 다시 그려짐.
-  // 그 말은 즉슨, props 나 state값이 바뀌면 화면이 다시 그려짐.
-  render() {
+  getReadContent() {
+    var i = 0;
+      var data = this.state.contents;
+
+      while (i < data.length) {
+        if (this.state.selected_content_id === data[i].id) {
+          return data[i];
+        }
+
+        i++;
+      }
+  }
+  getContent() {
     console.log('App render');
     var _title, _desc, _article = null;
+    var _content = null;
 
     if (this.state.mode === 'welcome') {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     } else if (this.state.mode === 'read') {
-      var i = 0;
-      var data = this.state.contents;
+      _content = this.getReadContent();
+      _title = _content.title;
+      _desc = _content.desc;
 
-      while (i < data.length) {
-        if (this.state.selected_content_id === data[i].id) {
-          _title = data[i].title;
-          _desc = data[i].desc;
-          break;
-        }
-        i++;
-      }
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     } else if (this.state.mode === 'create') {
       _article = <CreateContent insertTOC={(title, desc) => {
@@ -148,7 +151,19 @@ class App extends Component {
         this.max_content_id++;
 
       }}></CreateContent>;
+    } else if (this.state.mode === 'update') {
+       _content = this.getReadContent();
+       console.log('update', _content);
+       _article = <UpdateContent data = {_content}></UpdateContent>
     }
+
+    return _article;
+  }
+  // react는 state값이 바뀌면 해당 state를 사용하는 component의 render() 부분이 다시 호출됨.
+  // render() 함수가 다시 호출되므로 따라서 render() 함수 하위에 있는 컴포넌트들도 render() 함수가 있기 때문에
+  // 화면이 다시 그려짐.
+  // 그 말은 즉슨, props 나 state값이 바뀌면 화면이 다시 그려짐.
+  render() {
     return (
       <div className="App">
         <Subject 
@@ -193,7 +208,7 @@ class App extends Component {
             });
           }}>
         </TOC>
-        {_article}
+        {this.getContent()}
         {/* <ReadContent title={_title} desc={_desc}></ReadContent> */}
       </div>
     );
