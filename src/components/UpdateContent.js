@@ -9,6 +9,7 @@ class UpdateContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: this.props.data.id,
             title: this.props.data.title,
             desc: this.props.data.desc
         };
@@ -37,9 +38,15 @@ class UpdateContent extends Component {
             <form action="/update_process" method="post"
                 onSubmit={(e) => {
                     e.preventDefault();
+                    this.props.updateTOC(
+                        this.state.id,
+                        this.state.title,
+                        this.state.desc
+                    );
                     // this.props.updateTOC(e.target.title.value, e.target.desc.value);
                 }}
             >
+                <input type="hidden" name="id" value={this.state.id}></input>
                 <p>
                     <input 
                         type="text" 

@@ -145,7 +145,9 @@ class App extends Component {
         });
 
         this.setState({
-          contents: newContents
+          contents: newContents,
+          mode: 'read',
+          selected_content_id: this.max_content_id + 1
         });
 
         this.max_content_id++;
@@ -154,7 +156,25 @@ class App extends Component {
     } else if (this.state.mode === 'update') {
        _content = this.getReadContent();
        console.log('update', _content);
-       _article = <UpdateContent data = {_content}></UpdateContent>
+       _article = <UpdateContent data = {_content} updateTOC={(id, title, desc) => {
+        var _contents = Array.from(this.state.contents);
+        var i = 0;
+        while (i < _contents.length) {
+          if (_contents[i].id === id) {
+            _contents[i] = {
+              id: id,
+              title: title,
+              desc: desc
+            };
+            break;
+          }
+          i++;
+          this.setState({
+            contents: _contents,
+            mode: 'read'
+          });
+        }
+       }}></UpdateContent>
     }
 
     return _article;
